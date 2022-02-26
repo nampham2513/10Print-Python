@@ -5,35 +5,39 @@ import time
 from tkinter import *
 from random import randint
 
-resWidth = 600
-resHeight = resWidth
+resWidth = 1200
+resHeight = 800
 lineLength = 20
-timeStep = 0.03
+lineThick = 4
+timeStep = 0.0083
+isPressed = False
+
+print('Time per line:', (float(resWidth) / lineLength) * timeStep, 'secs')
+print('Time to draw canvas:', (float(resWidth) / lineLength) * timeStep * (float(resHeight) / lineLength), 'secs')
+
+print()
+print('Click on the drawing window to stop drawing')
 
 def drawLine(num, numx, numy):
 	global lineLength
 	 
 	if (num % 2) == 0:
-		canv.create_line(numx, numy, numx + lineLength, numy + lineLength, width = 4)
+		canv.create_line(numx, numy, numx + lineLength, numy + lineLength, width = lineThick)
 		
 	else:
-		canv.create_line(numx, numy + lineLength, numx + lineLength, numy, width = 4)
+		canv.create_line(numx, numy + lineLength, numx + lineLength, numy, width = lineThick)
 		
-#canv.create_line(0, 0, 20, 20, width = 2)
-#canv.create_line(20, 20, 40, 0, width = 2)
-
-#canv.create_line(posx, posy, posx + 20, posy + 20, width = 2) #0
-#posx += 20
-#canv.create_line(posx, posy + 20, posx + 20, 0, width = 2) #1
-
 def drawCanvas():
-	global resHeight, resWidth
+	global resHeight, resWidth, isPressed
 
 	posx = 0
 	posy = 0
 	
-	while True:
+	while isPressed == False:
 		for posy in range(0, resHeight, lineLength):
+			if isPressed == True:
+				return
+		
 			for posx in range(0, resWidth, lineLength):
 				num = randint(0, 1)
 				drawLine(num, posx, posy)
@@ -45,7 +49,10 @@ def drawCanvas():
 		canv.delete('all')
 		
 def on_canv_click(event):
-	root.destroy()
+	global isPressed
+
+	#print('Hey!', event)
+	isPressed = True
 			
 root = Tk()
 
